@@ -6,19 +6,19 @@ import map
 
 if __name__=="__main__":
     lons=map.lons;lats=map.lats
-    D=np.zeros((4,4))
-    #STRASBOURG 1, NANCY 2, PARIS 3, MULHOUSE 4, DIJON 5, BESANCON 6
+    D=np.zeros((6,6))
+    #PARIS 1, NANCY 2, STRASBOURG 3, MULHOUSE 4, BESANCON 5, DIJON 6
     #for i in range(5):
     #    for j in range(5):
     #        D[i,j]=np.sqrt((lons[i]-lons[j])**2+(lats[i]+lats[j])**2)
-    D[0,1]=312;D[0,2]=445;D[0,3]=440#;D[0,4]=365;D[0,5]=290
-    #D[0,1]=815;D[0,2]=757;D[0,3]=850;D[0,4]=992;D[0,5]=1105 #Test remplacement Paris par Berlin 
-    D[1,2]=133;D[1,3]=161#;D[1,4]=184;D[1,5]=191
-    D[2,3]=102#;D[2,4]=227;D[2,5]=282
-    #D[3,4]=130;D[3,5]=204
-    #D[4,5]=83
+    #D[0,1]=312;D[0,2]=445;D[0,3]=440;D[0,4]=365;D[0,5]=290
+    D[0,1]=815;D[0,2]=757;D[0,3]=850;D[0,4]=992;D[0,5]=1105 #Test remplacement Paris par Berlin 
+    D[1,2]=133;D[1,3]=161;D[1,4]=184;D[1,5]=191
+    D[2,3]=102;D[2,4]=227;D[2,5]=282
+    D[3,4]=130;D[3,5]=204
+    D[4,5]=83
     DD=np.transpose(D)+D
-    T=np.arange(1,5,dtype=int)-1
+    T=np.arange(1,7,dtype=int)-1
 
     def facto(n):
         if n == 0 :
@@ -32,60 +32,84 @@ if __name__=="__main__":
         return TT,j,k
 
     def KM(TT):
-        DT=np.zeros(4,dtype=int)
+        DT=np.zeros(6,dtype=int)
         KM=0
-        for i in range(3):
+        for i in range(5):
             DT[i]=DD[TT[i],TT[i+1]]
             KM=DT[i]+KM
-        return KM,TT
-    
+        return KM
+
+    def generate_permutations(A,k, result): #Heap algorithm 
+        if k == 1:
+             result.append(list(A))
+        else:
+            generate_permutations(A,k - 1, result)
+            for i in range(k - 1):
+                if k % 2 == 0:
+                    A[i], A[k-1] = A[k-1], A[i]
+                else:
+                    A[0], A[k-1] = A[k-1], A[0]
+                generate_permutations(A, k - 1, result)
 
     liste=[]
+    liste2=[]
+    generate_permutations(T,len(T),liste)
+    c=KM(liste[0])
+    print(liste[0])
+    print(c)
 
-    compare=KM(T)[0]
-    print(compare)
-    print(T)
-    Np=0 #nombre de permuations principales 
-    Np2=0 #nombre de sous-permutations 
-    iii=jjj=0
-    TT1=np.zeros((1,4),dtype=int)
-    for i in range(3): #boucle for des permutations principales (le zero du début va jusque la position de la dernière ville)
-        TT1,ii,jj=permutation(T,i,i+1)
-        liste.append(TT1) #permutation principale
-        print(TT1,i,KM(TT1)[0])
-        Np=Np+1 
-        if KM(TT1)[0]<=compare:
-            compare=KM(TT1)[0] #On garde en mémoire la permutation seulement si elle est pertinante (plus courte)
-        if i >= 1 : #à partir de la position 2 du zeros on démarre les sous-permutations
-            while Np2<=facto(i+2): #Tant que le nombre de sous permutations n'est pas égal au nombre de sous-permut on continu de tester
-                j=np.arange(i+1) # Indices des sous-permutations possibles. 
-                for p in range(i):
-                    TT1,ii,jj=permutation(TT1,j[p],j[p+1])
-                    print(TT1,i,KM(TT1)[0])
-                    liste.append(TT1)
-                    #print(TT1,KM(TT1)[0])
-                    Np2=Np2+1
-                    if KM(TT1)[0]<=compare:
-                        compare=KM(TT1)[0]
-                        iii=ii;jjj=jj
-                    if p+2 < i :
-                        TT1,ii,jj=permutation(TT1,j[p],j[p+2])
-                        liste.append(TT1)
-                        Np2=Np2+1
-                        if KM(TT1)[0]<=compare:
-                            compare=KM(TT1)[0]
-                            iii=ii;jjj=jj
+    for i in range(1,len(liste)):
+        print(KM(liste[i]),liste[i])
+        if KM(liste[i]) < c: 
+            c=KM(liste[i])
+            liste2=liste[i]
+        else: c=c 
+    print(liste[i],c)
 
-    print("Le chemin optimal prend",compare,"kms", " calculé en :",Np+Np2,"nombre d'essais"
-        "  Il correspond à la permuation",iii,jjj) 
 
-    paris=[1,6.5];dijon=[6.5,2];besançon=[8.7,1.5];mulhouse=[11.5,3.1];strasbourg=[12.3,5.5];nancy=[9,6.9]
 
-    ville=np.zeros((6,2))
-    ville[0,:]=paris;ville[1,:]=dijon;ville[2,:]=besançon;ville[3,:]=mulhouse;ville[4,:]=strasbourg;ville[5,:]=nancy
-    plt.figure()
-    plt.plot(ville[:,0],ville[:,1])
-    plt.scatter(ville[:,0],ville[:,1])
-    #plt.show()
+    #Np=0 #nombre de permuations principales 
+    #Np2=0 #nombre de sous-permutations 
+    #iii=jjj=0
+    #TT1=np.zeros((1,4),dtype=int)
+
+    #for i in range(3): #boucle for des permutations principales (le zero du début va jusque la position de la dernière ville)
+    #    TT1,ii,jj=permutation(T,i,i+1)
+    #    liste.append(TT1) #permutation principale
+    #    print(TT1,i,KM(TT1)[0])
+    #    Np=Np+1 
+    #    if KM(TT1)[0]<=compare:
+    #        compare=KM(TT1)[0] #On garde en mémoire la permutation seulement si elle est pertinante (plus courte)
+    #    if i >= 1 : #à partir de la position 2 du zeros on démarre les sous-permutations
+    #        while Np2<=facto(i+2): #Tant que le nombre de sous permutations n'est pas égal au nombre de sous-permut on continu de tester
+    #            j=np.arange(i+1) # Indices des sous-permutations possibles. 
+    #            for p in range(i):
+    #                TT1,ii,jj=permutation(TT1,j[p],j[p+1])
+    #                print(TT1,i,KM(TT1)[0])
+    #                liste.append(TT1)
+    #                #print(TT1,KM(TT1)[0])
+    #                Np2=Np2+1
+    #                if KM(TT1)[0]<=compare:
+    #                    compare=KM(TT1)[0]
+    #                    iii=ii;jjj=jj
+    #                if p+2 < i :
+    #                    TT1,ii,jj=permutation(TT1,j[p],j[p+2])
+    #                    liste.append(TT1)
+    #                    Np2=Np2+1
+    #                    if KM(TT1)[0]<=compare:
+    #                        compare=KM(TT1)[0]
+    #                        iii=ii;jjj=jj
+
+    #print("Le chemin optimal prend",compare,"kms", " calculé en :",Np+Np2,"nombre d'essais"
+    #    "  Il correspond à la permuation",iii,jjj) 
+#
+    #paris=[1,6.5];dijon=[6.5,2];besançon=[8.7,1.5];mulhouse=[11.5,3.1];strasbourg=[12.3,5.5];nancy=[9,6.9]
+#
+    #ville=np.zeros((6,2))
+    #ville[0,:]=paris;ville[1,:]=dijon;ville[2,:]=besançon;ville[3,:]=mulhouse;ville[4,:]=strasbourg;ville[5,:]=nancy
+    #plt.figure()
+    #plt.plot(ville[:,0],ville[:,1])
+    #plt.scatter(ville[:,0],ville[:,1])
+    plt.show()
     #print(liste)
 

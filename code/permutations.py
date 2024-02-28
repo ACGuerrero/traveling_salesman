@@ -17,4 +17,4 @@ result = []
 
 generate_permutations(array ,len(array), result)
 
-print(result)
+print(len(result))
