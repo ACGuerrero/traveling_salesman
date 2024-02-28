@@ -4,7 +4,7 @@ from mpl_toolkits.basemap import Basemap
 import numpy as np
 
 # Define the Lambert Conformal Conic projection parameters for France
-lon_0 = 5 # Central longitude
+lon_0 = 5# Central longitude
 lat_0 = 48 # Central latitude
 lat_1 = 46
 lat_2 = 50
@@ -44,10 +44,10 @@ offset = 5000
 for name, lon, lat in zip(names, lons, lats):
     plt.text(lon, lat+ offset, name, fontsize=8, ha='center', va='bottom', color='black')
 
-
-# Show the plot
-plt.title('Cities')
-plt.savefig('figures/france_map.pdf')
-plt.close()
-
-print(lons, lats)
+if __name__ == "__main__":
+  # Show the plot
+  plt.title('Cities')
+  plt.savefig('figures/france_map.pdf')
+  plt.show()
+  plt.close()
+  print(lons, lats)
