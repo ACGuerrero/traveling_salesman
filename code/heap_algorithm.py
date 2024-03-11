@@ -11,10 +11,9 @@ def generate_permutations(A,k, result):
             
             generate_permutations(A, k - 1, result)
 
-array = [1, 2, 3, 4] 
-
-result = []
-
-generate_permutations(array ,len(array), result)
-
-print(len(result))
+if __name__ == '__main__':
+    # Just an example
+    array = [1, 2, 3, 4] 
+    result = []
+    generate_permutations(array ,len(array), result)
+    print(len(result))
