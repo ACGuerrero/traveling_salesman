@@ -10,8 +10,8 @@ if __name__=="__main__":
     #for i in range(5):
     #    for j in range(5):
     #        D[i,j]=np.sqrt((lons[i]-lons[j])**2+(lats[i]+lats[j])**2)
-    #D[0,1]=312;D[0,2]=445;D[0,3]=440;D[0,4]=365;D[0,5]=290
-    D[0,1]=815;D[0,2]=757;D[0,3]=850;D[0,4]=992;D[0,5]=1105 #Test remplacement Paris par Berlin 
+    D[0,1]=312;D[0,2]=445;D[0,3]=440;D[0,4]=365;D[0,5]=290
+    #D[0,1]=815;D[0,2]=757;D[0,3]=850;D[0,4]=992;D[0,5]=1105 #Test remplacement Paris par Berlin 
     D[1,2]=133;D[1,3]=161;D[1,4]=184;D[1,5]=191
     D[2,3]=102;D[2,4]=227;D[2,5]=282
     D[3,4]=130;D[3,5]=204
@@ -52,16 +52,20 @@ if __name__=="__main__":
 
     liste=[]
     liste2=[]
+    distance=[]
     generate_permutations(T,len(T),liste)
-    c=KM(liste[0])
 
-    for i in range(1,len(liste)):
-        if KM(liste[i]) < c: 
-            c=KM(liste[i])
-            liste2=liste[i]
-        else: c=c 
+    for i in range(0,len(liste)):
+        distance.append(KM(liste[i]))
+        index=np.argmin(distance)
+    print(distance[index],liste[index])
 
-    print(liste[i],c)
+
+    #for i in range(1,len(liste)):
+    #    if KM(liste[i]) < c: 
+    #        c=KM(liste[i])
+    #        liste2.append(liste[i])
+    #    else: c=c;liste2.append(liste2)
         
     def random(T):
         p=int(np.random.rand()*6)
@@ -70,13 +74,13 @@ if __name__=="__main__":
         cc=KM(TT)
         return TT,cc
     
-    for i in range(1000):
-        F=0.0001
+    for i in range(100):
+        F=0.001
         c=KM(T)
         TT,cc=random(T)
-        pc2 = np.exp(-F*cc)
-        #pc1 = np.exp(-F*c)
-        if cc<=c : 
+        pc2 = np.exp(-F*cc)+0.3
+        pc1 = np.exp(-F*c)+0.3
+        if cc<c : 
             c=cc;T=TT
         else : 
             f = np.random.binomial(1,pc2)
@@ -85,8 +89,7 @@ if __name__=="__main__":
                 c=cc
         
 
-
-    print(TT,c)
+    #print(TT,c)
 
 
 
