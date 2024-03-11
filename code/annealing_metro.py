@@ -1,11 +1,10 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
 import scipy as sc 
-import map 
+#import map 
 
 
 if __name__=="__main__":
-    lons=map.lons;lats=map.lats
     D=np.zeros((6,6))
     #PARIS 1, NANCY 2, STRASBOURG 3, MULHOUSE 4, BESANCON 5, DIJON 6
     #for i in range(5):
@@ -29,7 +28,7 @@ if __name__=="__main__":
     def permutation(TT,j,k):
         a=0;b=0
         a=TT[j];b=TT[k];TT[j]=b;TT[k]=a
-        return TT,j,k
+        return TT
 
     def KM(TT):
         DT=np.zeros(6,dtype=int)
@@ -55,17 +54,39 @@ if __name__=="__main__":
     liste2=[]
     generate_permutations(T,len(T),liste)
     c=KM(liste[0])
-    print(liste[0])
-    print(c)
 
     for i in range(1,len(liste)):
-        print(KM(liste[i]),liste[i])
         if KM(liste[i]) < c: 
             c=KM(liste[i])
             liste2=liste[i]
         else: c=c 
-        
+
     print(liste[i],c)
+        
+    def random(T):
+        p=int(np.random.rand()*6)
+        m=int(np.random.rand()*6)
+        TT=permutation(T,p,m)
+        cc=KM(TT)
+        return TT,cc
+    
+    for i in range(1000):
+        F=0.0001
+        c=KM(T)
+        TT,cc=random(T)
+        pc2 = np.exp(-F*cc)
+        #pc1 = np.exp(-F*c)
+        if cc<=c : 
+            c=cc;T=TT
+        else : 
+            f = np.random.binomial(1,pc2)
+            if f == 1 : 
+                T=TT
+                c=cc
+        
+
+
+    print(TT,c)
 
 
 
@@ -111,6 +132,6 @@ if __name__=="__main__":
     #plt.figure()
     #plt.plot(ville[:,0],ville[:,1])
     #plt.scatter(ville[:,0],ville[:,1])
-    plt.show()
+    #plt.show()
     #print(liste)
 
