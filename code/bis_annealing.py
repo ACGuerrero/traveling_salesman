@@ -35,6 +35,8 @@ def itinerary_distance(itinerary):
 
 
 
+
+
 def greedy_optimization(city_list):
     # Generate permutations
     itineraries = []
@@ -49,6 +51,7 @@ def greedy_optimization(city_list):
     #Output
     best_itinerary =  [city['name'] for city in itineraries[index]]
     return best_itinerary, distances[index]
+
 
 def move_city_to_start(city_list, starting_city):
     city_index = next(index for (index, city) in enumerate(city_list) if city['name'] == starting_city)
