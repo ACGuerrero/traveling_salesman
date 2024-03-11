@@ -25,7 +25,8 @@ if __name__=="__main__":
         else:
             return n*facto(n-1)
 
-    def permutation(TT,j,k):
+    def permutation(T,j,k):
+        TT = T.copy()
         a=0;b=0
         a=TT[j];b=TT[k];TT[j]=b;TT[k]=a
         return TT
@@ -73,20 +74,23 @@ if __name__=="__main__":
         TT=permutation(T,p,m)
         cc=KM(TT)
         return TT,cc
-    
-    for i in range(100):
-        F=0.001
-        c=KM(T)
-        TT,cc=random(T)
-        pc2 = np.exp(-F*cc)+0.3
-        pc1 = np.exp(-F*c)+0.3
-        if cc<c : 
-            c=cc;T=TT
-        else : 
-            f = np.random.binomial(1,pc2)
-            if f == 1 : 
+    distances=[]
+    for j in range(100):   
+        for i in range(10):
+            F=0.003
+            c=KM(T)
+            TT,cc=random(T)
+            if cc<c : 
                 T=TT
-                c=cc
+            else :
+                pc2 = np.exp(-F*cc)
+                f = np.random.binomial(1,pc2)
+                if f == 1 :
+                    T=TT
+        distances.append(c)
+    ind = np.argmin(np.array(distances))
+    print('Minimal: ', distances[ind])
+    print('Average: ', np.mean(np.array(distances)))
         
 
     #print(TT,c)
