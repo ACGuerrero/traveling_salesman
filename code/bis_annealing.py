@@ -52,8 +52,7 @@ def greedy_optimization(city_list):
     Output: tuple, list with names of cities in order and float with distance in km
     '''
     # Generate permutations
-    itineraries = []
-    generate_permutations(city_list, len(city_list), itineraries)
+    itineraries =generate_permutations(city_list, len(city_list))
 
     # Calculate the distance of all the itineraries
     distances = np.array([itinerary_distance(itinerary) for itinerary in itineraries])
