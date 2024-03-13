@@ -42,7 +42,6 @@ def itinerary_distance(itinerary):
 
     return distance
 
-
 def greedy_optimization(city_list):
     '''
     This function performs the greedy optimization to obtain the best itinerary
@@ -63,7 +62,6 @@ def greedy_optimization(city_list):
     #Output
     best_itinerary =  [city['name'] for city in itineraries[index]]
     return best_itinerary, distances[index]
-
 
 def move_city_to_start(city_list, starting_city):
 
@@ -102,14 +100,20 @@ def metropolis_step(beta,itinerary):
     new_distance = itinerary_distance(new_itinerary)
 
     if  new_distance < distance:
-        return new_itinerary
+        return new_itinerary,distance
     else:
-        boltzmann_factor = np.exp(-beta*new_distance)
-        tirage = np.random.binomial(1,boltzmann_factor)
-        if tirage == 1 :
-            return new_itinerary
-        else:
-            return itinerary
+        r = np.random.rand()
+        pc2 = np.exp(-beta*(new_distance-distance))
+        if pc2>r:
+            return new_itinerary,distance
+        else : return itinerary,distance
+        
+        #boltzmann_factor = np.exp(-beta*new_distance)
+        #tirage = np.random.binomial(1,boltzmann_factor)
+        #if tirage == 1 :
+        #    return new_itinerary
+        #else:
+        #    return itinerary
 
 
 if __name__ == '__main__':
@@ -118,4 +122,14 @@ if __name__ == '__main__':
     
     # First we run the greedy algorithm
     greedy_itinerary, greedy_distance = greedy_optimization(cities_france)
-    print(f'Best itinerary is {greedy_itinerary} with a total distance of {greedy_distance}' )
+    print(f'Best itinerary by greedy algoritme is {greedy_itinerary} with a total distance of {greedy_distance}' )
+    Nstep=10000
+    new_itinerary=cities_france
+    tot=0
+    #for i in range(100):
+    for i in range(Nstep):
+        new_itinerary,distance = metropolis_step(0.001*i,new_itinerary)
+    names = [city['name'] for city in new_itinerary]
+    #tot+=distance
+    print(f'Best itinerary by metrolpolis is {names} with a total distance of {distance}')
+    #print(tot/100)

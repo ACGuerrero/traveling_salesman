@@ -23,7 +23,7 @@ m = Basemap(
 
 
 
-with open('data/citiesfr.json', 'r') as f:
+with open('C:/Users/MAISON/Desktop/traveling_salesman/code/data/cities.json', 'r') as f:
   citiesfr = json.load(f)
 
 lat = [city['latitude'] for city in citiesfr['cities']]
@@ -31,7 +31,10 @@ long = [city['longitude'] for city in citiesfr['cities']]
 names = [city['name'] for city in citiesfr['cities']]
 
 lons, lats = m(long, lat)
-
+lons0=lons[0]
+lons1=lons[1]
+lats0=lats[0]
+lats1=lats[1]
 
 offset = 5000
 for name, lon, lat in zip(names, lons, lats):
@@ -46,10 +49,17 @@ if __name__ == "__main__":
   # Draw parallels and meridians
   m.drawparallels(range(40, 60, 2), labels=[1, 0, 0, 0])
   m.drawmeridians(range(-10, 20, 2), labels=[0, 0, 0, 1])
+  #m.drawgreatcircle(lons0,lons1,lats0,lats1,linewidth=2,color='b')
+  for i in range(len(lons) - 1):
+        if not any(np.isnan([lons[i], lons[i + 1], lats[i], lats[i + 1]])):
+            m.drawgreatcircle(lons[i], lons[i + 1], lats[i], lats[i + 1], linewidth=2, color='b')
+
+  #for i in range(len(lons)-1):
+  #  m.drawgreatcircle(lons[i],lons[i+1],lats[i],lats[i+1],linewidth=2,color='b')
   # Show the plot
   m.scatter(lons, lats, marker = '.', color='r', zorder=5)
   plt.title('Cities')
   plt.savefig('figures/france_map.pdf')
   plt.show()
   plt.close()
-  print(lons, lats)
+  #print(lons, lats)
