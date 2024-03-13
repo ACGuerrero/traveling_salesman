@@ -17,6 +17,7 @@ if __name__=="__main__":
     D[3,4]=130;D[3,5]=204
     D[4,5]=83
     DD=np.transpose(D)+D
+    
     T=np.arange(1,7,dtype=int)-1
 
     def facto(n):
@@ -74,20 +75,24 @@ if __name__=="__main__":
         TT=permutation(T,p,m)
         cc=KM(TT)
         return TT,cc
+    
     distances=[]
+
     for j in range(100):   
         for i in range(10):
-            F=0.003
+            F=0.0358
             c=KM(T)
             TT,cc=random(T)
+            r = np.random.rand()
             if cc<c : 
                 T=TT
             else :
-                pc2 = np.exp(-F*cc)
-                f = np.random.binomial(1,pc2)
-                if f == 1 :
+                pc2 = np.exp(-F*(cc-c))
+                if pc2 > r : 
+                #f = np.random.binomial(1,pc2):
                     T=TT
         distances.append(c)
+    
     ind = np.argmin(np.array(distances))
     print('Minimal: ', distances[ind])
     print('Average: ', np.mean(np.array(distances)))
