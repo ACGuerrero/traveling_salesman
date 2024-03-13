@@ -21,7 +21,7 @@ def generate_permutations(A,k):
 if __name__ == '__main__':
     # Just an example
     array = [1, 2, 3, 4]
-    permutations = generate_permutations(array,len(array))
+    permutations = generate_permutations(array,len(array)-1)
     print('Voici toutes les permutations: \n')
     for permutation in permutations:
         print(permutation)
