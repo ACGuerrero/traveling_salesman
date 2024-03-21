@@ -1,6 +1,8 @@
 import numpy as np 
 from good_heap import *
 from cities import cities_data
+import matplotlib.pyplot as plt
+
 
 def earth_distance(lat1, lon1, lat2, lon2):
     '''
@@ -117,7 +119,7 @@ def metropolis_step(beta,itinerary):
         else:
             return itinerary
 
-def metropolis_step_with_starting_point(beta,itinerary):
+def metropolis_step_with_starting_point(beta, itinerary):
     '''
     This function performs a step of the Metropolis-Hastings algorithm.
 
@@ -125,18 +127,26 @@ def metropolis_step_with_starting_point(beta,itinerary):
     Output: np.array, selected itinerary
     '''
     distance = itinerary_distance(itinerary)
-    rest = itinerary[1:]
-    newrest = np.random.permutation(rest)
-    new_itinerary = itinerary
-    new_itinerary[1:] = newrest
+    
+    # Make a deep copy of the itinerary
+    new_itinerary = np.copy(itinerary)
+    
+    # Shuffle elements starting from the second index
+    rest = new_itinerary[1:]
+    np.random.shuffle(rest)
+    
+    # Assign shuffled elements back to the itinerary
+    new_itinerary[1:] = rest
+    
     new_distance = itinerary_distance(new_itinerary)
+    print(distance, new_distance)
 
-    if  new_distance < distance:
+    if new_distance < distance:
         return new_itinerary
     else:
-        boltzmann_factor = np.exp(-beta*(new_distance-distance))
+        boltzmann_factor = np.exp(-beta * (new_distance - distance))
         r = np.random.rand()
-        if boltzmann_factor > r :
+        if boltzmann_factor > r:
             return new_itinerary
         else:
             return itinerary
@@ -145,50 +155,45 @@ def smarter_greedy():
     '''
     This one starts at a city, selects the closest one, and repeats
     '''
+
     return None
 
 
 if __name__ == '__main__':
     # Recover french cities
-    cities_europe = np.array([city for city in cities_data["cities"] if city.get("continent") == "Europe"])[0:8]
+    cities_europe = np.array([city for city in cities_data["cities"] if city.get("continent") == "Europe"])
     cities_france = np.array([city for city in cities_data["cities"] if city.get("country") == "France"])
-    using = cities_europe
+    cities = np.array([city for city in cities_data['cities']])
+    using = cities
+    np.random.shuffle(using)
 
-    # First we run the Metropolis Hastings
-    steps = 100
-    beta = 0.039
-    hastings_itinerary = using
-    for i in range(steps):
-        hastings_itinerary = metropolis_step(beta,hastings_itinerary)
-    hastings_distance = itinerary_distance(hastings_itinerary)
-
-    hastings_itinerary_names = [city['name'] for city in hastings_itinerary]
-    print('\n**********************************\n')
-    print(f'\nHastings itinerary is {hastings_itinerary_names} with a total distance of {hastings_distance}\n' )
-
-
-    # Now we run the greedy algorithm
-    #greedy_itinerary, greedy_distance = greedy_optimization(using)
-    #print(f'Greedy itinerary is {greedy_itinerary} with a total distance of {greedy_distance}\n' )
-
-    # Now with Starting point !
-
-    starting_city = 'Dijon'
-    print('\n**********************************\n')
-
-    print('\nStaring city is '+starting_city)
-
-    #greedy_itinerary1, greedy_distance1 = greedy_optimization_with_starting_point(using,starting_city)
-    #print(f'\nWe greedily get {greedy_itinerary1} with a total distance of {greedy_distance1}\n' )
+    starting_city = 'Beyrouth'
+    steps = 500
+    beta = 10
+    print(f'\nStaring city is {starting_city}')
 
     # Now Hastings
-    steps = 10000
-    beta = 0.0001
-    hastings_itinerary = move_city_to_start(using, starting_city)
+    distances1 = np.zeros(steps)
+    distances2 = np.zeros(steps)
+    metropolis_itinerary = move_city_to_start(using, starting_city)
     for i in range(steps):
-        hastings_itinerary = metropolis_step_with_starting_point(beta,hastings_itinerary)
-    hastings_distance = itinerary_distance(hastings_itinerary)
+        metropolis_itinerary = metropolis_step_with_starting_point(beta,metropolis_itinerary)
+        distances1[i] = itinerary_distance(metropolis_itinerary)/1000
+    metropolis_distance = itinerary_distance(metropolis_itinerary)
+    print(distances1)
 
-    hastings_itinerary_names = [city['name'] for city in hastings_itinerary]
+    # First we run the Metropolis metropolis
+    metropolis_itinerary = using
+    for i in range(steps):
+        metropolis_itinerary = metropolis_step(beta,metropolis_itinerary)
+        distances2[i] = itinerary_distance(metropolis_itinerary)/1000
+    metropolis_distance = itinerary_distance(metropolis_itinerary)
 
-    print(f'\nHastings itinerary is {hastings_itinerary_names} with a total distance of {hastings_distance}\n' )
+    metropolis_itinerary_names = [city['name'] for city in metropolis_itinerary]
+
+    print(f'\nmetropolis itinerary is {metropolis_itinerary_names} with a total distance of {metropolis_distance}\n' )
+
+    plt.plot(range(len(distances1)),distances1,label = 'with starting .')
+    plt.plot(range(len(distances2)),distances2, label = 'no starting .')
+    plt.legend()
+    plt.savefig('figures/distances.png')
