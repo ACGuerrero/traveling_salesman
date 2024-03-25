@@ -1,5 +1,5 @@
 import numpy as np 
-from good_heap import *
+from heap import *
 from cities import cities_data
 import matplotlib.pyplot as plt
 
@@ -148,6 +148,7 @@ def metropolis_step_with_starting_point(beta, itinerary):
         r = np.random.rand()
         if boltzmann_factor > r:
             return new_itinerary
+
         else:
             return itinerary
         
