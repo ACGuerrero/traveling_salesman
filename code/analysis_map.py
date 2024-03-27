@@ -10,8 +10,7 @@ def metropolis(cities, beta, steps, dont_permute = 1):
     distances = np.zeros(steps)
     metropolis_itinerary = cities
     for i in range(steps):
-        metropolis_itinerary = metropolis_step(beta = beta, element = metropolis_itinerary, cost_func = itinerary_distance, dont_permute = dont_permute)
-        distances[i] = itinerary_distance(metropolis_itinerary)
+        metropolis_itinerary, distances[i] = metropolis_step(beta = beta, element = metropolis_itinerary, cost_func = itinerary_distance, dont_permute = dont_permute)
     print('Optimization completed')
     return metropolis_itinerary, distances
 

@@ -18,6 +18,30 @@ def metropolis_step(beta, element, cost_func, dont_permute=0):
 
     # Perform Metropolis-Hastings acceptance
     if new_cost < cost or np.random.rand() < np.exp(-beta * (new_cost - cost)):
+        return new_element, new_cost
+    else:
+        return element, cost
+    
+def metropolis_step_swap(beta, element, cost_func, dont_permute=0):
+    '''
+    This function performs a step of the Metropolis-Hastings algorithm.
+
+    Input: float, np.array, function, and int indicating the
+    number of elements not to shuffle
+    Output: np.array, selected element
+    '''
+    def swap_random(seq):
+        idx = range(len(seq))
+        i1, i2 = np.random.sample(idx, 2)
+        seq[i1], seq[i2] = seq[i2], seq[i1]
+    # Create a shuffled copy of element and calculate cost
+    new_element = np.copy(element)
+    swap_random(new_element[dont_permute:])
+    cost = cost_func(element)
+    new_cost = cost_func(new_element)
+
+    # Perform Metropolis-Hastings acceptance
+    if new_cost < cost or np.random.rand() < np.exp(-beta * (new_cost - cost)):
         return new_element
     else:
         return element
