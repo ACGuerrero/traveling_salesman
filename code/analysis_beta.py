@@ -33,9 +33,9 @@ if __name__ == '__main__':
     betas = np.linspace(0.1, 1.1, 6)
     runs = 50
 
-    # Create data
-    for beta in betas: 
-        run_optimization(cities, beta, steps, runs)
+    # Create data if exists leave uncommented
+    #for beta in betas: 
+    #    run_optimization(cities, beta, steps, runs)
 
     # Grid setup
     cols = 3  # Number of columns in the grid
