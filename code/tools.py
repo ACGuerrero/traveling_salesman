@@ -58,3 +58,27 @@ def move_city_to_start(city_list, starting_city):
     city_list[i] = city_list[0]
     city_list[0] = temp
     return city_list
+
+def manhattan_distance(points):
+    tot = 0
+    for i in range(len(points)-1) :
+        tot += np.abs(points[i,0]-points[i+1,0])+np.abs(points[i,0]-points[i+1,1])
+    return tot
+
+def clustered_cities(N, centers, side):
+    # As in the original paper, we use clustered cities
+    num_centers = len(centers)
+    cities_per_cluster = N // num_centers
+    cities = []
+
+    for center in centers:
+        cluster_cities = np.random.rand(cities_per_cluster, 2) * side + np.array(center) - side / 2
+        cities.extend(cluster_cities)
+
+    # Add remaining cities at random, there's always a village in the middle of nowhere
+    if len(cities) < N:
+        remaining_cities = N - len(cities)
+        random_cities = np.random.rand(remaining_cities, 2)
+        cities.extend(random_cities)
+    np.random.shuffle(cities)
+    return np.array(cities)
