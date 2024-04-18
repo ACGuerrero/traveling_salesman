@@ -2,3 +2,4 @@ venv/
 __pycache__/
 beta_better.py
 biblio/
+analysis*

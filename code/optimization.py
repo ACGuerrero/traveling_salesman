@@ -124,10 +124,24 @@ def itinerary_cost(itinerary, cities):
         total_length += np.linalg.norm(cities[itinerary[i]] - cities[itinerary[i+1]]) # 
     return total_length
 
-def acceptance_probability(delta_E, beta):
-    return np.exp(-beta * delta_E)
+def acceptance_probability(delta_E, T):
+    return np.exp(-delta_E/T)
 
-def simulated_annealing_step(cities, current_itinerary, beta):
+def cooling_linear_m(T0, alpha, step):
+    return T0-alpha*step
+
+def cooling_exponential_m(T0, alpha, step):
+    # Alpha lesser than 1
+    return T0 * alpha**step
+
+def cooling_logarithmic_m(T0, alpha, step):
+    # alpha bigger that 1
+    return T0 / (1+alpha * np.log(step + 1))
+
+def cooling_quadratic_m(T0, alpha, step):
+    return T0 / (1 + alpha * step**2)
+
+def simulated_annealing_step(cities, current_itinerary, Tcurr, T0, alpha, step, cooling_schedule):
 
     num_cities = len(current_itinerary)
     new_itinerary = current_itinerary.copy()
@@ -142,14 +156,16 @@ def simulated_annealing_step(cities, current_itinerary, beta):
 
     # Acceptance condition
     delta_E = new_length - current_length
-    if delta_E < 0 or np.random.rand() < acceptance_probability(delta_E, beta):
-        return new_itinerary, new_length
+    if delta_E < 0 or np.random.rand() < acceptance_probability(delta_E, Tcurr):
+        new_T = cooling_schedule(T0, alpha, step)
+        return new_itinerary, new_length, new_T
     else:
-        return current_itinerary, current_length
+        new_T = cooling_schedule(T0, alpha, step)
+        return current_itinerary, current_length, new_T
 
 
 
-def simulated_annealing(cities, steps, T_init, cooling):
+def simulated_annealing(cities, steps, T0, alpha, cooling_schedule):
     '''
     This function will apply the stimulated annealing algorithm.
     However, it will save the best itinerary found, not only the most recent one !
@@ -160,21 +176,16 @@ def simulated_annealing(cities, steps, T_init, cooling):
     best_itinerary = current_itinerary.copy()
     best_length = current_length
 
-    T = T_init
-    beta = 1 / T
-    for _ in range(steps) : 
-        current_itinerary, current_length = simulated_annealing_step(cities, current_itinerary, beta)
+    T = T0
+    for step in range(steps) : 
+        current_itinerary, current_length, T = simulated_annealing_step(cities, current_itinerary, T, T0, alpha, step, cooling_schedule)
         if current_length < best_length:
                 best_itinerary = current_itinerary
                 best_length = current_length
 
-        # Cooling routine
-        T *= 1-cooling
-        beta = 1 / T
-
     return best_itinerary, best_length
 
-def simulated_annealing_restart(cities, steps, T_init, cooling):
+def simulated_annealing_restart(cities, steps, T0, cooling):
     '''
     This function will apply the stimulated annealing algorithm.
     However, it will save the best itinerary found, not only the most recent one !
@@ -185,7 +196,7 @@ def simulated_annealing_restart(cities, steps, T_init, cooling):
     best_itinerary = current_itinerary.copy()
     best_length = current_length
 
-    T = T_init
+    T = T0
     beta = 1 / T
     for _ in range(steps) : 
         current_itinerary, current_length = simulated_annealing_step(cities, current_itinerary, beta)
@@ -197,7 +208,7 @@ def simulated_annealing_restart(cities, steps, T_init, cooling):
         T *= 1-cooling
         beta = 1 / T
         if T<0.1:
-            T = T_init
+            T = T0
             beta = 1 / T
             print('Temperature restarted')
 
