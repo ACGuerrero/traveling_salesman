@@ -1,4 +1,11 @@
 import numpy as np
+def regular_polygon_vertices(apothem, num_sides, center=(0, 0)):
+    radius = apothem / np.cos(np.pi / num_sides)
+    angles = np.linspace(0, 2 * np.pi, num_sides, endpoint=False)
+    x = center[0] + radius * np.cos(angles)
+    y = center[1] + radius * np.sin(angles)
+    vertices = np.column_stack((x, y))
+    return vertices
 
 def earth_distance(lat1, lon1, lat2, lon2):
     '''
