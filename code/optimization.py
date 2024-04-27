@@ -117,6 +117,15 @@ def generate_random_itinerary(num_cities):
     itinerary = np.random.permutation(num_cities)
     return itinerary
 
+def itinerary_cost_all(allitinerary,cities):
+    lengths=[]
+    for j in range(len(allitinerary)):
+        total_length=0
+        for p in range(len(allitinerary[j,:])-1):
+            total_length += np.linalg.norm(cities[allitinerary[j,p]] - cities[allitinerary[j,p+1]])
+        lengths.append(total_length)
+    return lengths
+
 def itinerary_cost(itinerary, cities):
     # The itinerary is the order !
     total_length = 0
