@@ -89,3 +89,12 @@ def clustered_cities(N, centers, side):
         cities.extend(random_cities)
     np.random.shuffle(cities)
     return np.array(cities)
+
+def cost_euclidean(points):
+    return sum([np.linalg.norm(points[i] - points[i+1]) for i in range(len(points)-1)])
+
+def cost_taxicab(points):
+    return sum([np.linalg.norm(points[i] - points[i+1], ord=1) for i in range(len(points)-1)])
+
+def cost_spherical(points):
+    return sum([np.arccos(np.sin(points[i,0])*np.sin(points[i+1,0])+np.cos(points[i,0])*np.cos(points[i+1,0])*np.cos(points[i,1]-points[i+1,1])) for i in range(len(points)-1)])

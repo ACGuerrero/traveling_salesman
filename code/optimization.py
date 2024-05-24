@@ -126,12 +126,10 @@ def itinerary_cost_all(allitinerary,cities):
         lengths.append(total_length)
     return lengths
 
+
 def itinerary_cost(itinerary, cities):
     # The itinerary is the order !
-    total_length = 0
-    for i in range(len(itinerary) - 1):
-        total_length += np.linalg.norm(cities[itinerary[i]] - cities[itinerary[i+1]]) # 
-    return total_length
+    return np.sum([ np.linalg.norm(cities[itinerary[i]] - cities[itinerary[i+1]]) for i in range(len(itinerary) - 1)])
 
 def acceptance_probability(delta_E, T):
     return np.exp(-delta_E/T)
