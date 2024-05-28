@@ -1,0 +1,82 @@
+\documentclass[onecolumn,11pt]{article}
+%*********
+%Paquetes
+%*********
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, total={7in, 9in}]{geometry}
+\usepackage{amsfonts}
+\usepackage{dsfont}
+\usepackage{physics}
+\usepackage{amsmath}
+
+\newcommand{\mba}{\mathbf{a}}
+\newcommand{\mbA}{\mathbf{A}}
+\newcommand{\mbe}{\mathbf{e}}
+\newcommand{\mbE}{\mathbf{E}}
+\newcommand{\mbr}{\mathbf{r}}
+\newcommand{\mbk}{\mathbf{k}}
+\newcommand{\Id}{\mathds{1}}
+\newcommand{\mcU}{\mathcal{U}}
+\newcommand{\mcV}{\mathcal{V}}
+\newcommand{\mcO}{\mathcal{O}}
+\newcommand{\mcI}{\mathcal{I}}
+\newcommand{\mcL}{\mathcal{L}}
+\newcommand{\mcS}{\mathcal{S}}
+\newcommand{\mcB}{\mathcal{B}}
+\newcommand{\mcH}{\mathcal{H}}
+\newcommand{\mcF}{\mathcal{F}}
+\newcommand{\mcC}{\mathcal{C}}
+\newcommand{\mcT}{\mathcal{T}}
+\newcommand{\mcE}{\ensuremath{\mathcal{E}} }
+\newcommand{\mcG}{\ensuremath{\mathcal{G}} }
+\newcommand{\mcM}{\mathcal{M}}
+\newcommand{\mcN}{\mathcal{N}}
+\newcommand{\nnn}{\mathcal{N}}
+\newcommand{\mmm}{\mathcal{M}}
+\newcommand{\sss}{\mathcal{S}}
+\newcommand{\mcD}{\mathcal{D}}
+\newcommand{\mcA}{\mathcal{A}}
+\newcommand{\mcP}{\mathcal{P}}
+
+\begin{document}
+
+The taxicab norm
+\begin{equation}
+d_{T}(\vec{p}_{1},\vec{p}_{2}) = \abs{x_{1}-x_{2}} + \abs{y_{1}-y_{2}}
+\end{equation}
+while the Euclidean norm is
+\begin{equation}
+d_{E}(\vec{p}_{1},\vec{p}_{2}) = \sqrt{(x_{1}-x_{2})^{2} + (y_{1}-y_{2})^{2}}
+\end{equation}
+And the ditance between two points in the surface of a sphere of radius R is
+\begin{align}
+d_{S}(\vec{p}_{1},\vec{p}_{2}) = &R \arccos \big( \sin(\phi_{1})\sin(\phi_{2})\big. \\
+&\big.+ \cos(\phi_{1})\cos(\phi_{2})\cos(\theta_{1}-\theta_{2}) \big)
+\end{align}
+
+These are the cooling we used :
+\begin{equation}
+    T_k = \frac{T_0}{1+\alpha\log(k+1)}
+\end{equation}
+\begin{equation}
+    T_k = \frac{T_0}{1+\alpha k^2}
+\end{equation}
+\begin{equation}
+    T_k = T_0\alpha^k
+\end{equation}
+Their derivatives with respect to $k$ are
+\begin{equation}
+    \dv{T_k}{k} = -\frac{\alpha T_0}{(1+\alpha\log(k+1))^2}
+\end{equation}
+\begin{equation}
+    \dv{T_k}{k} = -\frac{2\alpha k T_0}{(1+\alpha k^2)^2}
+\end{equation}
+\begin{equation}
+    \dv{T_k}{k} = \alpha T_0\log(\alpha)
+\end{equation}
+
+
+
+
+\end{document}
